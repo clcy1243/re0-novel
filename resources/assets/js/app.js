@@ -13,8 +13,12 @@ require('./bootstrap');
  * the application, or feel free to tweak this setup for your needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
+// Vue.component('example', require('./components/Example.vue'));
+Vue.component('header-nav', require('./components/HeaderNav.vue'));
+Vue.component('content', require('./components/Content.vue'));
 
 const app = new Vue({
     el: 'body'
 });
+
+Vue.config.devtools = true;

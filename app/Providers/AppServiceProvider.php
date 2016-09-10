@@ -27,5 +27,14 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment() !== 'production') {
             $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
         }
+        if (!(isset($_SERVER['argv']) && $_SERVER['argv'][1] == 'schedule:run')) {
+            \Log::debug('#' . $_SERVER['REQUEST_TIME_FLOAT'] . '# REQUEST_URI:' . request()->server('REQUEST_URI'), ['PARAMETERS' => [request()->server(),request()->toArray()]]);
+        }
+        \DB::listen(function($query) {
+            $sql = str_replace("?", "'%s'", $query->sql);
+            $params = $query->bindings;
+            array_unshift($params, $sql);
+            \Log::debug('#'.$_SERVER['REQUEST_TIME_FLOAT'].'# SQL:'.call_user_func_array('sprintf',$params),['time'=>$query->time]);
+        });
     }
 }
